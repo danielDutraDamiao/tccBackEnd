@@ -1,7 +1,9 @@
 package com.backend.backendtcc.service;
 
 import com.backend.backendtcc.dto.CategoriaDTO;
+import com.backend.backendtcc.dto.SubCategoriaDTO;
 import com.backend.backendtcc.model.Categoria;
+import com.backend.backendtcc.model.SubCategoria;
 import com.backend.backendtcc.repository.CategoriaRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -53,8 +55,16 @@ public class CategoriaService {
 
     private CategoriaDTO convertToDTO(Categoria categoria) {
         CategoriaDTO categoriaDTO = new CategoriaDTO();
-        BeanUtils.copyProperties(categoria, categoriaDTO);
+        categoriaDTO.setIdCategoria(categoria.getIdCategoria());
+        categoriaDTO.setNomeCategoria(categoria.getNomeCategoria());
         return categoriaDTO;
+    }
+
+    private SubCategoriaDTO convertToSubcategoriaDTO(SubCategoria subcategoria) {
+        SubCategoriaDTO subcategoriaDTO = new SubCategoriaDTO();
+        subcategoriaDTO.setIdSubCategoria(subcategoria.getIdSubCategoria());
+        subcategoriaDTO.setNomeSubCategoria(subcategoria.getNomeSubCategoria());
+        return subcategoriaDTO;
     }
 
     private Categoria convertToEntity(CategoriaDTO categoriaDTO) {

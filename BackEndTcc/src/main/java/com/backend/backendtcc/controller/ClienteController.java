@@ -1,7 +1,9 @@
 package com.backend.backendtcc.controller;
 
 import com.backend.backendtcc.dto.ClienteDTO;
+import com.backend.backendtcc.dto.SubCategoriaDTO;
 import com.backend.backendtcc.service.ClienteService;
+import com.backend.backendtcc.service.SubCategoriaService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +14,11 @@ import java.util.List;
 @RequestMapping("/api/clientes")
 public class ClienteController {
     private final ClienteService clienteService;
+    private final SubCategoriaService subCategoriaService;
 
-    public ClienteController(ClienteService clienteService) {
+    public ClienteController(ClienteService clienteService, SubCategoriaService subCategoriaService) {
         this.clienteService = clienteService;
+        this.subCategoriaService = subCategoriaService;
     }
 
     @GetMapping
@@ -52,4 +56,10 @@ public class ClienteController {
         clienteService.deletarCliente(idCliente);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/categorias/{idCategoria}/subcategorias")
+    public List<SubCategoriaDTO> listarSubCategoriasPorCategoria(@PathVariable int idCategoria) {
+        return subCategoriaService.listarSubCategoriasPorCategoria(idCategoria);
+    }
+
 }

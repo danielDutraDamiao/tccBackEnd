@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import jakarta.persistence.*;
-import org.w3c.dom.Text;
 
 @Data
 @NoArgsConstructor
@@ -23,22 +22,23 @@ public class Produto {
     private double precoProduto;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_categoria")
-    private Categoria categoria;
+    @JoinColumn(name = "id_subcategoria")
+    private SubCategoria subCategoria;
 
     @Lob
-    @Column(name = "imagem_produto", columnDefinition="LONGTEXT")
+    @Column(name = "imagem_produto", columnDefinition = "LONGTEXT")
     private String imagemProduto;
 
     // Construtor com argumentos
-    public Produto(String nomeProduto, double precoProduto, Categoria categoria, String imagemProduto) {
+    public Produto(String nomeProduto, double precoProduto, SubCategoria subcategoria, String imagemProduto) {
         this.nomeProduto = nomeProduto;
         this.precoProduto = precoProduto;
-        this.categoria = categoria;
+        this.subCategoria = subcategoria;
         this.imagemProduto = imagemProduto;
     }
 
-    public Categoria getCategoria() {
-        return categoria;
+    public SubCategoria getSubCategoria() {
+        return subCategoria;
     }
 }
+

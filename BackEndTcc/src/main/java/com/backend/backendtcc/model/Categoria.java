@@ -20,7 +20,7 @@ public class Categoria {
     private String nomeCategoria;
 
     @OneToMany(mappedBy = "categoria")
-    private List<Produto> produtos;
+    private List<SubCategoria> subCategorias;
 
     // Construtor com argumentos
     public Categoria(String nomeCategoria) {

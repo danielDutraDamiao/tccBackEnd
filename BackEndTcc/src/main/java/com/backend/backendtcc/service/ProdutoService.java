@@ -2,8 +2,10 @@ package com.backend.backendtcc.service;
 
 import com.backend.backendtcc.dto.CategoriaDTO;
 import com.backend.backendtcc.dto.ProdutoDTO;
+import com.backend.backendtcc.dto.SubCategoriaDTO;
 import com.backend.backendtcc.model.Categoria;
 import com.backend.backendtcc.model.Produto;
+import com.backend.backendtcc.model.SubCategoria;
 import com.backend.backendtcc.repository.ProdutoRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -27,8 +29,6 @@ public class ProdutoService {
                 .collect(Collectors.toList());
     }
 
-
-
     public ProdutoDTO obterProduto(int idProduto) {
         Optional<Produto> produtoOptional = produtoRepository.findById(idProduto);
         return produtoOptional.map(this::convertToDTO).orElse(null);
@@ -37,15 +37,15 @@ public class ProdutoService {
     public ProdutoDTO criarProduto(ProdutoDTO produtoDTO) {
         Produto produto = convertToEntity(produtoDTO);
 
-        // Obtenha o ID da categoria do DTO
-        int idCategoria = produtoDTO.getCategoriaProduto().getIdCategoria();
+        // Obtenha o ID da subcategoria do DTO
+        int idSubcategoria = produtoDTO.getSubcategoria().getIdSubCategoria();
 
-        // Crie uma instância de Categoria com o ID
-        Categoria categoria = new Categoria();
-        categoria.setIdCategoria(idCategoria);
+        // Crie uma instância de SubCategoria com o ID
+        SubCategoria subcategoria = new SubCategoria();
+        subcategoria.setIdSubCategoria(idSubcategoria);
 
-        // Associe a categoria ao produto
-        produto.setCategoria(categoria);
+        // Associe a subcategoria ao produto
+        produto.setSubCategoria(subcategoria);
 
         // Salve o produto no banco de dados
         Produto produtoSalvo = produtoRepository.save(produto);
@@ -53,7 +53,6 @@ public class ProdutoService {
         // Converta o produto salvo para DTO
         return convertToDTO(produtoSalvo);
     }
-
 
     public ProdutoDTO atualizarProduto(int idProduto, ProdutoDTO produtoDTO) {
         Optional<Produto> produtoOptional = produtoRepository.findById(idProduto);
@@ -77,17 +76,25 @@ public class ProdutoService {
         produtoDTO.setPrecoProduto(produto.getPrecoProduto());
         produtoDTO.setImagemProduto(produto.getImagemProduto());
 
-        Categoria categoria = produto.getCategoria();
-        if (categoria != null) {
-            CategoriaDTO categoriaDTO = new CategoriaDTO();
-            categoriaDTO.setIdCategoria(categoria.getIdCategoria());
-            categoriaDTO.setNomeCategoria(categoria.getNomeCategoria());
-            produtoDTO.setCategoriaProduto(categoriaDTO);
+        SubCategoria subcategoria = produto.getSubCategoria();
+        if (subcategoria != null) {
+            SubCategoriaDTO subcategoriaDTO = new SubCategoriaDTO();
+            subcategoriaDTO.setIdSubCategoria(subcategoria.getIdSubCategoria());
+            subcategoriaDTO.setNomeSubCategoria(subcategoria.getNomeSubCategoria());
+
+            Categoria categoria = subcategoria.getCategoria();
+            if (categoria != null) {
+                CategoriaDTO categoriaDTO = new CategoriaDTO();
+                categoriaDTO.setIdCategoria(categoria.getIdCategoria());
+                categoriaDTO.setNomeCategoria(categoria.getNomeCategoria());
+                subcategoriaDTO.setCategoria(categoriaDTO);
+            }
+
+            produtoDTO.setSubcategoria(subcategoriaDTO);
         }
 
         return produtoDTO;
     }
-
 
     private Produto convertToEntity(ProdutoDTO produtoDTO) {
         Produto produto = new Produto();

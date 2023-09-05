@@ -2,8 +2,7 @@ package com.backend.backendtcc.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 @Data
 @NoArgsConstructor

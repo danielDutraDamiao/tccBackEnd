@@ -4,6 +4,7 @@ import com.backend.backendtcc.dto.ProdutoDTO;
 import com.backend.backendtcc.service.ProdutoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class ProdutoController {
     }
 
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<ProdutoDTO>> listarProdutos() {
         List<ProdutoDTO> produtos = produtoService.listarProdutos();
         return ResponseEntity.ok(produtos);

@@ -27,7 +27,7 @@ public class UserController {
     private PasswordEncoder passwordEncoder;
 
 
-    @GetMapping("")
+    @GetMapping("listar")
     public ResponseEntity<List<UserResponseDTO>> listAll(){
 
         List<User> list = this.userRepository.findAll();
@@ -53,7 +53,7 @@ public class UserController {
 
 
 
-    @PostMapping("")
+    @PostMapping("create")
     public ResponseEntity<UserResponseDTO> create(@Valid @RequestBody UserRequest user){
 
 

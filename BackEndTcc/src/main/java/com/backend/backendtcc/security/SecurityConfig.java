@@ -66,10 +66,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/login").permitAll()
                 .antMatchers("/api/users/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/produtos").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/categorias").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/subcategorias").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/cidades").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/estados").permitAll()
+
+
+
                 // .antMatchers("/api/books/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/users").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/produtos").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/users/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/subcategorias").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/cidades").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/estados").permitAll()
+
                 // Our private endpoints
                 .anyRequest().authenticated();
 

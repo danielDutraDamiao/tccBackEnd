@@ -7,9 +7,12 @@ import org.w3c.dom.Text;
 public class ProdutoDTO {
     private int idProduto;
     private String nomeProduto;
-    private double precoProduto;
+    private Double precoProduto;
     private SubCategoriaDTO subcategoria;
     private String imagemProduto;
+    private Double quantidade;
+    private String statusInventario;
+    private Double avaliacao;
 
     // Métodos getter e setter
 

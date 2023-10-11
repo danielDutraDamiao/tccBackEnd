@@ -22,6 +22,15 @@ public class Produto {
     @Column(name = "preco_produto")
     private double precoProduto;
 
+    @Column(name = "quantidade_produto")
+    private Double quantidade;
+
+    @Column(name = "status_inventario")
+    private String statusInventario;
+
+    @Column(name = "avaliacao")
+    private Double avaliacao;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_subcategoria")
     private SubCategoria subCategoria;

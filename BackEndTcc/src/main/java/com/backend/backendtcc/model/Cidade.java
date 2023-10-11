@@ -24,6 +24,12 @@ public class Cidade {
     @JoinColumn(name = "estado_id")
     private Estado estado;
 
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "id_ong")
+    private Ong ong;
+
+
     public Cidade(String nomeCidade, Estado estado) {
         this.nomeCidade = nomeCidade;
         this.estado = estado;

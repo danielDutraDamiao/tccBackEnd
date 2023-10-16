@@ -1,5 +1,6 @@
 package com.backend.backendtcc.controller;
 
+import com.backend.backendtcc.dto.CidadeDTO;
 import com.backend.backendtcc.model.Cidade;
 import com.backend.backendtcc.service.CidadeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,14 +16,15 @@ public class CidadeController {
     private CidadeService cidadeService;
 
     @GetMapping
-    public List<Cidade> findAll() {
+    public List<CidadeDTO> findAll() {
         return cidadeService.findAll();
     }
 
     @GetMapping("/{id}")
-    public Cidade findById(@PathVariable int id) {
+    public CidadeDTO findById(@PathVariable int id) {
         return cidadeService.findById(id);
     }
+
 
     @PostMapping
     public Cidade save(@RequestBody Cidade cidade) {

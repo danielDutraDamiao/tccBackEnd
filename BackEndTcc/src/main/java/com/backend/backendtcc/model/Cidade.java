@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -21,14 +22,12 @@ public class Cidade {
 
     @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "estado_id")
+    @JoinColumn(name = "id_estado")
     private Estado estado;
 
     @JsonBackReference
-    @ManyToOne
-    @JoinColumn(name = "id_ong")
-    private Ong ong;
-
+    @OneToMany(mappedBy = "cidade")
+    private List<Ong> ongs;
 
     public Cidade(String nomeCidade, Estado estado) {
         this.nomeCidade = nomeCidade;

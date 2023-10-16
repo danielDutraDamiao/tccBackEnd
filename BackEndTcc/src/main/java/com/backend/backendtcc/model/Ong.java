@@ -2,6 +2,7 @@ package com.backend.backendtcc.model;
 
 import com.backend.backendtcc.dto.CidadeDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -27,15 +28,15 @@ public class Ong {
     @Column(name = "cnpj")
     private String cnpj;
 
-    @JsonBackReference
-    @OneToMany(mappedBy = "ong")
-    private List<Cidade> cidades;
+    @JsonManagedReference
+    @ManyToOne
+    @JoinColumn(name = "id_cidade")
+    private Cidade cidade;
 
     // Construtor com argumentos
     public Ong(String nome, String endereco) {
         this.nome = nome;
         this.endereco = endereco;
         this.cnpj = cnpj;
-
     }
 }

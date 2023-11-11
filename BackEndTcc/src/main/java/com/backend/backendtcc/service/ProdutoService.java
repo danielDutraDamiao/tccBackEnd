@@ -75,6 +75,9 @@ public class ProdutoService {
         produtoDTO.setNomeProduto(produto.getNomeProduto());
         produtoDTO.setPrecoProduto(produto.getPrecoProduto());
         produtoDTO.setImagemProduto(produto.getImagemProduto());
+        produtoDTO.setAvaliacao(produto.getAvaliacao());
+        produtoDTO.setQuantidade(produto.getQuantidade());
+        produtoDTO.setStatusInventario(produto.getStatusInventario());
 
         SubCategoria subcategoria = produto.getSubCategoria();
         if (subcategoria != null) {

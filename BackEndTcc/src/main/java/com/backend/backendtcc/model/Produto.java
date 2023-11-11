@@ -40,11 +40,15 @@ public class Produto {
     private String imagemProduto;
 
     // Construtor com argumentos
-    public Produto(String nomeProduto, double precoProduto, SubCategoria subcategoria, String imagemProduto) {
+    public Produto(String nomeProduto, double precoProduto, SubCategoria subcategoria, String imagemProduto, String statusInventario, Double avaliacao, Double quantidade) {
         this.nomeProduto = nomeProduto;
         this.precoProduto = precoProduto;
         this.subCategoria = subcategoria;
         this.imagemProduto = imagemProduto;
+        this.statusInventario = statusInventario;
+        this.quantidade =   quantidade;
+        this.avaliacao = avaliacao;
+
     }
 
     public SubCategoria getSubCategoria() {

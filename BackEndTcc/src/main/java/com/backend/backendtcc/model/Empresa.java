@@ -1,5 +1,6 @@
 package com.backend.backendtcc.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
@@ -23,13 +24,18 @@ public class Empresa {
     @Column(name = "cnpj")
     private String cnpj;
 
+    @JsonManagedReference
+    @ManyToOne
+    @JoinColumn(name = "id_cidade")
+    private Cidade cidade;
+
 
 
     // Construtor com argumentos
-    public Empresa(String nome, String endereco) {
+    public Empresa(String nome, String endereco, String cnpj, Cidade cidade) {
         this.nome = nome;
         this.endereco = endereco;
         this.cnpj = cnpj;
-
+        this.cidade = cidade;
     }
 }

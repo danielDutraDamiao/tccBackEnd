@@ -56,6 +56,22 @@ public class JwtUtil {
         return expiration.before(new Date());
     }
 
+    // Método para gerar token com claims adicionais
+    public String generateTokenWithClaims(String username, Map<String, Object> claims) {
+        long nowMillis = System.currentTimeMillis();
+        Date now = new Date(nowMillis);
+        long expMillis = nowMillis + 3600000; // Exemplo de tempo de expiração (1 hora)
+        Date exp = new Date(expMillis);
+
+        return Jwts.builder()
+                .setClaims(claims) // Adicionando claims
+                .setSubject(username)
+                .setIssuedAt(now)
+                .setExpiration(exp)
+                .signWith(SignatureAlgorithm.HS512, "secretKey") // Use sua chave secreta
+                .compact();
+    }
+
 
 
     private String doGenerateToken(Map<String, Object> claims, String subject) {

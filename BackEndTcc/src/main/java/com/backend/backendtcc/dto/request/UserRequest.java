@@ -5,6 +5,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
+import com.backend.backendtcc.model.Perfil;
 import lombok.Data;
 
 @Data
@@ -26,6 +27,8 @@ public class UserRequest {
 
     @NotBlank(message = "O password do usuário não pode ser em branco.")
     private String password;
+
+    private Perfil perfil; // Campo para armazenar o nome do perfil
 
 
 }

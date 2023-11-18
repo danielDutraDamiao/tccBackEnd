@@ -4,6 +4,7 @@ package com.backend.backendtcc.controller;
 import com.backend.backendtcc.dto.request.LoginRequest;
 import com.backend.backendtcc.dto.response.JwtResponseDTO;
 import com.backend.backendtcc.model.User;
+import com.backend.backendtcc.repository.PerfilRepository;
 import com.backend.backendtcc.repository.UserRepository;
 import com.backend.backendtcc.security.jwt.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class Autenticate {
@@ -42,10 +46,15 @@ public class Autenticate {
 
         boolean password_equal = passwordEncoder.matches(loginRequst.getPassword(), user.getPassword());
         if (password_equal) {
+            try {
+                Map<String, Object> claims = new HashMap<>();
+                claims.put("perfil", user.getPerfil().getPerfil()); // Supondo que Perfil tenha um método getPerfil() que retorna o nome
 
-            String token = jwtUtil.generateToken(user.getUsername());
-
-            return ResponseEntity.status(HttpStatus.OK).body(JwtResponseDTO.fromEntity("Bearer", token, null));
+                String token = jwtUtil.generateTokenWithClaims(user.getUsername(), claims);
+                return ResponseEntity.status(HttpStatus.OK).body(JwtResponseDTO.fromEntity("Bearer", token, null));
+            } catch (Exception e) {
+                e.printStackTrace(); // Importante para entender a causa do erro
+            }
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

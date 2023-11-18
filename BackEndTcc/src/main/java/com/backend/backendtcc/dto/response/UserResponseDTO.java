@@ -1,6 +1,7 @@
 package com.backend.backendtcc.dto.response;
 
 
+import com.backend.backendtcc.model.Perfil;
 import com.backend.backendtcc.model.User;
 import lombok.Data;
 import org.springframework.validation.FieldError;
@@ -15,6 +16,7 @@ public class UserResponseDTO {
     private String name;
     private String username;
     private String password;
+    private Perfil perfil;
     private String email;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -27,6 +29,7 @@ public class UserResponseDTO {
         response.setName(user.getName());
         response.setUsername(user.getUsername());
         response.setPassword(user.getPassword());
+        response.setPerfil(user.getPerfil());
         response.setEmail(user.getEmail());
         response.setCreatedAt(user.getCreatedAt());
         response.setUpdatedAt(user.getUpdatedAt());

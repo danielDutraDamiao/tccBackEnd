@@ -2,7 +2,9 @@ package com.backend.backendtcc.controller;
 
 import com.backend.backendtcc.dto.request.UserRequest;
 import com.backend.backendtcc.dto.response.UserResponseDTO;
+import com.backend.backendtcc.model.Perfil;
 import com.backend.backendtcc.model.User;
+import com.backend.backendtcc.repository.PerfilRepository;
 import com.backend.backendtcc.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +27,9 @@ public class UserController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private PerfilRepository perfilRepository;
 
 
     @GetMapping("listar")
@@ -54,28 +59,27 @@ public class UserController {
 
 
     @PostMapping("create")
-    public ResponseEntity<UserResponseDTO> create(@Valid @RequestBody UserRequest user){
-
-
-//        if(bindingResult.hasErrors()){
-//
-//            List<FieldError> errors =  bindingResult.getFieldErrors().stream().map(e->new FieldError(e.getField(), e.getDefaultMessage())).collect(Collectors.toList());
-//
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(UserResponseDto.fromEntity(new User(), errors, null));
-//        }
-//
-//
-
+    public ResponseEntity<UserResponseDTO> create(@Valid @RequestBody UserRequest userRequest) {
         User newUser = new User();
-        newUser.setEmail(user.getEmail());
-        newUser.setName(user.getName());
-        newUser.setPassword(passwordEncoder.encode(user.getPassword()));
-        newUser.setUsername(user.getUsername());
+        newUser.setName(userRequest.getName());
+        newUser.setUsername(userRequest.getUsername());
+        newUser.setEmail(userRequest.getEmail());
+        newUser.setPassword(passwordEncoder.encode(userRequest.getPassword()));
 
-        UserResponseDTO response = UserResponseDTO.fromEntity(this.userRepository.save(newUser));
+        // Buscar perfil pelo id
+        Perfil perfil = perfilRepository.findById(userRequest.getPerfil().getIdPerfil())
+                .orElseThrow(() -> new RuntimeException("Perfil não encontrado"));
+        newUser.setPerfil(perfil);
+
+        // Salvar o usuário
+        userRepository.save(newUser);
+
+        // Criar e retornar a resposta
+        UserResponseDTO response = UserResponseDTO.fromEntity(newUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
-
     }
+
+
 
 
     @PutMapping("/{id}")

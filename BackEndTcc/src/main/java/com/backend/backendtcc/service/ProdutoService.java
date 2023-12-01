@@ -65,6 +65,20 @@ public class ProdutoService {
         return null;
     }
 
+    public boolean diminuirQuantidadeProduto(int idProduto, int quantidade) {
+        Optional<Produto> produtoOptional = produtoRepository.findById(idProduto);
+        if (produtoOptional.isPresent()) {
+            Produto produto = produtoOptional.get();
+            if (produto.getQuantidade() >= quantidade) {
+                produto.setQuantidade(produto.getQuantidade() - quantidade);
+                produtoRepository.save(produto);
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     public void deletarProduto(int idProduto) {
         produtoRepository.deleteById(idProduto);
     }

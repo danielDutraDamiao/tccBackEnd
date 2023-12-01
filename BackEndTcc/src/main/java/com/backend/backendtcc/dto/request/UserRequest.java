@@ -8,6 +8,8 @@ import javax.validation.constraints.Positive;
 import com.backend.backendtcc.model.Perfil;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 public class UserRequest {
 
@@ -29,6 +31,8 @@ public class UserRequest {
     private String password;
 
     private Perfil perfil; // Campo para armazenar o nome do perfil
+
+    private BigDecimal ecocoins;
 
 
 }

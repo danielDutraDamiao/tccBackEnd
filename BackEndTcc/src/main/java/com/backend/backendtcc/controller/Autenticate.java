@@ -34,31 +34,31 @@ public class Autenticate {
     JwtUtil jwtUtil;
 
     @PostMapping(value = "/api/login")
-    public ResponseEntity<JwtResponseDTO> login(@Valid @RequestBody LoginRequest loginRequst,
+    public ResponseEntity<JwtResponseDTO> login(@Valid @RequestBody LoginRequest loginRequest,
                                                 BindingResult bindingResult) {
-
-        // se o usuário existir
-        User  user = userRepository.findByUsername(loginRequst.getUsername());
+        // Verificar se o usuário existe
+        User user = userRepository.findByUsername(loginRequest.getUsername());
 
         if (user == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        boolean password_equal = passwordEncoder.matches(loginRequst.getPassword(), user.getPassword());
-        if (password_equal) {
+        boolean passwordEqual = passwordEncoder.matches(loginRequest.getPassword(), user.getPassword());
+        if (passwordEqual) {
             try {
                 Map<String, Object> claims = new HashMap<>();
-                claims.put("perfil", user.getPerfil().getPerfil()); // Supondo que Perfil tenha um método getPerfil() que retorna o nome
+                claims.put("perfil", user.getPerfil().getPerfil()); // Adicionar o perfil
+                claims.put("userId", user.getId()); // Adicionar o ID do usuário
 
                 String token = jwtUtil.generateTokenWithClaims(user.getUsername(), claims);
                 return ResponseEntity.status(HttpStatus.OK).body(JwtResponseDTO.fromEntity("Bearer", token, null));
             } catch (Exception e) {
-                e.printStackTrace(); // Importante para entender a causa do erro
+                e.printStackTrace(); // Logar a exceção para diagnóstico
             }
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-
     }
+
 
 }

@@ -1,5 +1,6 @@
 package com.backend.backendtcc.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import javax.persistence.*;
@@ -29,6 +30,8 @@ public class User {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    @Column
+    private BigDecimal ecocoins;
 
 
     @PrePersist

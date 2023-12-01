@@ -6,6 +6,7 @@ import com.backend.backendtcc.model.User;
 import lombok.Data;
 import org.springframework.validation.FieldError;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class UserResponseDTO {
     private String username;
     private String password;
     private Perfil perfil;
+    private BigDecimal ecocoins;
     private String email;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -30,6 +32,7 @@ public class UserResponseDTO {
         response.setUsername(user.getUsername());
         response.setPassword(user.getPassword());
         response.setPerfil(user.getPerfil());
+        response.setEcocoins(user.getEcocoins());
         response.setEmail(user.getEmail());
         response.setCreatedAt(user.getCreatedAt());
         response.setUpdatedAt(user.getUpdatedAt());

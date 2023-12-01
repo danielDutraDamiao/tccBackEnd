@@ -1,6 +1,7 @@
 package com.backend.backendtcc.controller;
 
 import com.backend.backendtcc.dto.request.UserRequest;
+import com.backend.backendtcc.dto.request.UserUpdateRequest;
 import com.backend.backendtcc.dto.response.UserResponseDTO;
 import com.backend.backendtcc.model.Perfil;
 import com.backend.backendtcc.model.User;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -83,23 +85,52 @@ public class UserController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> edit(@PathVariable Long id, @Valid @RequestBody UserRequest userRequest){
+    public ResponseEntity<UserResponseDTO> edit(@PathVariable Long id, @Valid @RequestBody UserUpdateRequest userUpdateRequest) {
+        Optional<User> opUser = userRepository.findById(id);
 
-        Optional<User> opUser = this.userRepository.findById(id);
-
-        if(opUser.isPresent()){
+        if (opUser.isPresent()) {
             User user = opUser.get();
-            user.setEmail(userRequest.getEmail());
-            user.setName(userRequest.getName());
-            user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
-            user.setUsername(userRequest.getUsername());
 
-            UserResponseDTO response = UserResponseDTO.fromEntity(this.userRepository.save(user));
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+            // Atualize os campos conforme necessário
+            user.setName(userUpdateRequest.getName());
+            user.setUsername(userUpdateRequest.getUsername());
+            user.setEmail(userUpdateRequest.getEmail());
+
+            // Atualize a senha somente se uma nova senha for fornecida
+            if (userUpdateRequest.getPassword() != null && !userUpdateRequest.getPassword().isEmpty()) {
+                user.setPassword(passwordEncoder.encode(userUpdateRequest.getPassword()));
+            }
+
+            // Atualizar ecocoins e perfil, se necessário
+            user.setEcocoins(userUpdateRequest.getEcocoins());
+
+            if (userUpdateRequest.getPerfil() != null) {
+                // Aqui, você pode adicionar lógica para atualizar o perfil do usuário, se necessário
+            }
+
+            User updatedUser = userRepository.save(user);
+            return ResponseEntity.ok(UserResponseDTO.fromEntity(updatedUser));
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
 
+    @PutMapping("/updateEcoCoins/{userId}")
+    public ResponseEntity<?> updateEcoCoins(@PathVariable Long userId, @RequestParam BigDecimal ecoCoins) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (!userOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        User user = userOptional.get();
+        // Inicializa ecocoins com zero se for nulo
+        if (user.getEcocoins() == null) {
+            user.setEcocoins(BigDecimal.ZERO);
+        }
+        user.setEcocoins(user.getEcocoins().add(ecoCoins));
+        userRepository.save(user);
+
+        return ResponseEntity.ok().build();
     }
 
 

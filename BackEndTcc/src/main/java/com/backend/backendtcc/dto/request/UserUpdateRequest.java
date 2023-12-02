@@ -13,4 +13,5 @@ public class UserUpdateRequest {
     private String password; // Sem a validação @NotBlank
     private Perfil perfil;
     private BigDecimal ecocoins;
+    private BigDecimal ecopoints;
 }

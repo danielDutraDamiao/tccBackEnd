@@ -33,6 +33,9 @@ public class User {
     @Column
     private BigDecimal ecocoins;
 
+    @Column
+    private BigDecimal ecopoints;
+
 
     @PrePersist
     public void prePersist(){

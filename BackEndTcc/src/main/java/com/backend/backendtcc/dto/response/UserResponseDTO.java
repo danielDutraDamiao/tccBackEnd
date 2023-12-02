@@ -19,6 +19,7 @@ public class UserResponseDTO {
     private String password;
     private Perfil perfil;
     private BigDecimal ecocoins;
+    private BigDecimal ecopoints;
     private String email;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -33,6 +34,7 @@ public class UserResponseDTO {
         response.setPassword(user.getPassword());
         response.setPerfil(user.getPerfil());
         response.setEcocoins(user.getEcocoins());
+        response.setEcopoints(user.getEcopoints());
         response.setEmail(user.getEmail());
         response.setCreatedAt(user.getCreatedAt());
         response.setUpdatedAt(user.getUpdatedAt());

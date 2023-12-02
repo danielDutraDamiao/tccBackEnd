@@ -34,5 +34,7 @@ public class UserRequest {
 
     private BigDecimal ecocoins;
 
+    private BigDecimal ecopoints;
+
 
 }

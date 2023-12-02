@@ -7,6 +7,7 @@ import com.backend.backendtcc.model.Perfil;
 import com.backend.backendtcc.model.User;
 import com.backend.backendtcc.repository.PerfilRepository;
 import com.backend.backendtcc.repository.UserRepository;
+import com.backend.backendtcc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,9 @@ public class UserController {
     @Autowired
     private PerfilRepository perfilRepository;
 
+    @Autowired
+    private UserService userService;
+
 
     @GetMapping("listar")
     public ResponseEntity<List<UserResponseDTO>> listAll(){
@@ -45,6 +49,11 @@ public class UserController {
 
     }
 
+    @GetMapping("/{id}/ecopoints")
+    public ResponseEntity<BigDecimal> getEcoPoints(@PathVariable Long id) {
+        BigDecimal ecoPoints = userService.obterEcoPointsDoUsuario(id);
+        return ResponseEntity.ok(ecoPoints);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> listById(@PathVariable Long id){
@@ -103,6 +112,8 @@ public class UserController {
 
             // Atualizar ecocoins e perfil, se necessário
             user.setEcocoins(userUpdateRequest.getEcocoins());
+            user.setEcopoints(userUpdateRequest.getEcopoints());
+
 
             if (userUpdateRequest.getPerfil() != null) {
                 // Aqui, você pode adicionar lógica para atualizar o perfil do usuário, se necessário
@@ -114,6 +125,26 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+
+    @PutMapping("/updateEcoPoints/{userId}")
+    public ResponseEntity<?> updateEcoPoints(@PathVariable Long userId, @RequestParam BigDecimal ecoPoints) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (!userOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        User user = userOptional.get();
+        BigDecimal currentEcoPoints = user.getEcopoints();
+        if (currentEcoPoints == null) {
+            currentEcoPoints = BigDecimal.ZERO;
+        }
+        user.setEcopoints(currentEcoPoints.add(ecoPoints));
+        userRepository.save(user);
+
+        return ResponseEntity.ok().build();
+    }
+
+
 
     @PutMapping("/updateEcoCoins/{userId}")
     public ResponseEntity<?> updateEcoCoins(@PathVariable Long userId, @RequestParam BigDecimal ecoCoins) {

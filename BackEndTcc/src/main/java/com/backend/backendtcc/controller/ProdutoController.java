@@ -56,30 +56,45 @@ public class ProdutoController {
     }
 
     @PostMapping("/comprar/{idProduto}/{idUsuario}")
-    public ResponseEntity<?> comprarProduto(@PathVariable int idProduto, @PathVariable Long idUsuario, @RequestParam("quantidade") int quantidade) {
+    public ResponseEntity<?> comprarProduto(@PathVariable int idProduto, @PathVariable Long idUsuario, @RequestParam("quantidade") int quantidade, @RequestParam("ecopointsUsados") BigDecimal ecopointsUsados) {
         ProdutoDTO produto = produtoService.obterProduto(idProduto);
         if (produto == null || produto.getQuantidade() < quantidade) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Produto indisponível ou quantidade insuficiente em estoque.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Produto indisponível ou quantidade insuficiente em estoque.");
         }
 
         BigDecimal precoProduto = BigDecimal.valueOf(produto.getPrecoProduto());
         BigDecimal custoTotal = precoProduto.multiply(BigDecimal.valueOf(quantidade));
 
-        if (!userService.atualizarEcoCoinsUsuario(idUsuario, custoTotal.negate())) {
-            return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED)
-                    .body("EcoCoins insuficientes para realizar a compra.");
+        // Obter os EcoPoints do usuário
+        BigDecimal ecopointsDoUsuario = userService.obterEcoPointsDoUsuario(idUsuario);
+
+        // Calcular o desconto máximo possível
+        BigDecimal descontoMaximo = ecopointsDoUsuario.multiply(new BigDecimal("0.5"));
+
+        // Calcular o desconto real com base nos EcoPoints usados
+        BigDecimal descontoReal = ecopointsUsados.min(descontoMaximo).multiply(new BigDecimal("0.5"));
+
+        // Aplicar desconto no custo total
+        BigDecimal custoTotalComDesconto = custoTotal.subtract(descontoReal);
+
+        // Verificar se o usuário tem EcoCoins suficientes após o desconto
+        if (!userService.atualizarEcoCoinsUsuario(idUsuario, custoTotalComDesconto.negate())) {
+            return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body("EcoCoins insuficientes para realizar a compra.");
         }
 
         if (!produtoService.diminuirQuantidadeProduto(idProduto, quantidade)) {
             // Reverter a atualização dos ecocoins
-            userService.atualizarEcoCoinsUsuario(idUsuario, custoTotal);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Falha ao atualizar o estoque do produto.");
+            userService.atualizarEcoCoinsUsuario(idUsuario, custoTotalComDesconto);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Falha ao atualizar o estoque do produto.");
         }
+
+        // Atualizar os EcoPoints do usuário
+        userService.atualizarEcoPointsDoUsuario(idUsuario, ecopointsUsados.negate());
 
         return ResponseEntity.ok().build();
     }
+
+
 
 
 

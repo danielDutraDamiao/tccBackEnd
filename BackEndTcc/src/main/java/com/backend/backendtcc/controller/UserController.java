@@ -1,5 +1,6 @@
 package com.backend.backendtcc.controller;
 
+import com.backend.backendtcc.dto.request.RecuperarSenhaRequest;
 import com.backend.backendtcc.dto.request.UserRequest;
 import com.backend.backendtcc.dto.request.UserUpdateRequest;
 import com.backend.backendtcc.dto.response.UserResponseDTO;
@@ -11,7 +12,6 @@ import com.backend.backendtcc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -125,6 +125,30 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+
+    @PutMapping("/recuperarSenha")
+    public ResponseEntity<String> recuperarSenha(@RequestBody RecuperarSenhaRequest recuperarSenhaRequest) {
+        Optional<User> userOptional = Optional.ofNullable(userRepository.findByUsername(recuperarSenhaRequest.getUsername()));
+
+        if (!userOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
+        }
+
+        User user = userOptional.get();
+
+        // Verifica se a nova senha e a confirmação são iguais
+        if (!recuperarSenhaRequest.getNovaSenha().equals(recuperarSenhaRequest.getConfirmarNovaSenha())) {
+            return ResponseEntity.badRequest().body("A confirmação da nova senha não corresponde.");
+        }
+
+        // Atualiza a senha do usuário
+        user.setPassword(passwordEncoder.encode(recuperarSenhaRequest.getNovaSenha()));
+        userRepository.save(user);
+
+        return ResponseEntity.ok().build();
+    }
+
+
 
     @PutMapping("/updateEcoPoints/{userId}")
     public ResponseEntity<?> updateEcoPoints(@PathVariable Long userId, @RequestParam BigDecimal ecoPoints) {

@@ -68,11 +68,8 @@ public class ProdutoController {
         // Obter os EcoPoints do usuário
         BigDecimal ecopointsDoUsuario = userService.obterEcoPointsDoUsuario(idUsuario);
 
-        // Calcular o desconto máximo possível
-        BigDecimal descontoMaximo = ecopointsDoUsuario.multiply(new BigDecimal("0.5"));
-
         // Calcular o desconto real com base nos EcoPoints usados
-        BigDecimal descontoReal = ecopointsUsados.min(descontoMaximo).multiply(new BigDecimal("0.5"));
+        BigDecimal descontoReal = ecopointsUsados.multiply(new BigDecimal("0.5"));
 
         // Aplicar desconto no custo total
         BigDecimal custoTotalComDesconto = custoTotal.subtract(descontoReal);

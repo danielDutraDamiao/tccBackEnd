@@ -87,6 +87,7 @@ public class ProdutoController {
 
         // Atualizar os EcoPoints do usuário
         userService.atualizarEcoPointsDoUsuario(idUsuario, ecopointsUsados.negate());
+        userService.adicionarEcoPoints(idUsuario, BigDecimal.ONE);
 
         return ResponseEntity.ok().build();
     }

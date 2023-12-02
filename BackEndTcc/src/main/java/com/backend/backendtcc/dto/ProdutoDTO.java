@@ -13,6 +13,7 @@ public class ProdutoDTO {
     private Double quantidade;
     private String statusInventario;
     private Double avaliacao;
+    private String tipo;
 
     // Métodos getter e setter
 

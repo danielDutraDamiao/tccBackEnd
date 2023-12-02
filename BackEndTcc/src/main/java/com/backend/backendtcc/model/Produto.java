@@ -31,6 +31,9 @@ public class Produto {
     @Column(name = "avaliacao")
     private Double avaliacao;
 
+    @Column(name = "tipo")
+    private String tipo;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_subcategoria")
     private SubCategoria subCategoria;
